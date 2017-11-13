@@ -1,6 +1,8 @@
 package serial;
 
 import java.util.Scanner;
+
+import org.jdom2.output.XMLOutputter;
 public class Creator {
 	
 	public static void print(String s) { System.out.println(s); }
@@ -23,7 +25,23 @@ public class Creator {
 				> party member
 				> references to job objects
 	*/
-		Scanner in = new Scanner(System.in);
-		print("Which object would you like to create?");
+		//Scanner in = new Scanner(System.in);
+		//print("Which object would you like to create?");
+		
+		String name = "drk";
+		String role = "tank";
+		int level = -10;
+		Job drk = new Job(name,role,level);
+		
+		Serializer ser = new Serializer();
+		
+		try {
+			print(new XMLOutputter().outputString(ser.serialize(drk)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }
