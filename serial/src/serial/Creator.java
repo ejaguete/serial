@@ -2,6 +2,7 @@ package serial;
 
 import java.util.Scanner;
 
+import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 public class Creator {
 	
@@ -30,15 +31,14 @@ public class Creator {
 		
 		String name = "drk";
 		String role = "tank";
-		int level = -10;
+		int level = 50;
 		Job drk = new Job(name,role,level);
 		
 		Serializer ser = new Serializer();
 		
 		try {
-			print(new XMLOutputter().outputString(ser.serialize(drk)));
+			print(new XMLOutputter(Format.getPrettyFormat()).outputString(ser.serialize(drk)));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
