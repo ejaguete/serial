@@ -7,6 +7,12 @@ public class Job {
 	private String name;
 	private String role;
 	private int level;
+
+	public Job() {
+		name = "";
+		role = "";
+		level = -1;
+	}
 	
 	/**
 	 * @param n : name

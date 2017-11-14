@@ -9,6 +9,10 @@ public class Player {
 	private String name;
 	private ArrayList<Job> jobs = new ArrayList<Job>();
 	
+	public Player() {
+		name = "";
+	}
+	
 	public Player(String n) {
 		setName(n);
 	}

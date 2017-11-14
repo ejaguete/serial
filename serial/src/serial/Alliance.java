@@ -6,6 +6,8 @@ public class Alliance {
 	
 	private Party[] parties = new Party[3];
 	
+	public Alliance() {}
+	
 	public Alliance(Party a, Party b, Party c) {
 		parties[0] = a;
 		parties[1] = b;
