@@ -53,20 +53,48 @@ public class Deserializer {
 					if(!Modifier.isPublic(field.getModifiers()))
 						field.setAccessible(true);
 					Element ve = (Element) fe.getChildren().get(0);
-					field.set(inst, value());
+					field.set(inst, value(ve,field.getType()));
 				}
 			} else {
 				Class comptype = inst.getClass().getComponentType();
 				for(Object a : objects) 
-					Array.set(inst, objects.indexOf(a), value());
+					Array.set(inst, objects.indexOf(a), value((Element) fes.get(objects.indexOf(a)), comptype));
 			}
 			
 		}
 	}
 
-	private Object value() {
-		// TODO Auto-generated method stub
-		return null;
+	private Object value(Element ve, Class type) throws ClassNotFoundException {
+		String vtype = ve.getName();
+		if(vtype.equals("null"))
+			return null;
+		else if(vtype.equals("reference"))
+			return table.get(ve.getText());
+		else {
+			if(type.equals(boolean.class))
+				return Byte.valueOf(ve.getText());
+			
+			else if(type.equals(char.class))
+				return new Character(ve.getText().charAt(0));
+			
+			else if(type.equals(short.class))
+				return Short.valueOf(ve.getText());
+			
+			else if(type.equals(long.class))
+				return Long.valueOf(ve.getText());
+			
+			else if(type.equals(int.class))
+				return Integer.valueOf(ve.getText());
+			
+			else if(type.equals(double.class))
+				return Double.valueOf(ve.getText());
+			
+			else if(type.equals(float.class))
+				return Float.valueOf(ve.getText());
+			
+			else 
+				return ve.getText();
+		}
 	}
 
 
