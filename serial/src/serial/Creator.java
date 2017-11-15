@@ -1,29 +1,19 @@
 package serial;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JComboBox;
-import java.awt.GridBagConstraints;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Insets;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.PatternSyntaxException;
-import java.awt.event.ActionEvent;
-import javax.swing.JDesktopPane;
-import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JPanel;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import java.awt.CardLayout;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Creator {
 
@@ -359,8 +349,7 @@ public class Creator {
 					msg = setPlayerFields(name, job1, lvl1, job2, lvl2);
 				} else // user clicked confirm when no class was chosen
 					msg = "<html>ERROR : you have not chosen a class to create";
-				
-				System.out.println(Sender.objects.size());
+
 				msg += "<br># objects created: " + Sender.objects.size();
 				consoleText.setText(msg);
 			}
@@ -368,6 +357,15 @@ public class Creator {
 		
 		buttonEnter.setBounds(162, 332, 89, 23);
 		frmObjectCreator.getContentPane().add(buttonEnter);
+		
+		JButton buttonCreate = new JButton("Create Objects");
+		buttonCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Sender.finished = true;
+			}
+		});
+		buttonCreate.setBounds(277, 332, 132, 23);
+		frmObjectCreator.getContentPane().add(buttonCreate);
 	}
 
 

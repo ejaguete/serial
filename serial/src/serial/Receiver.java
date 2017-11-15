@@ -1,42 +1,52 @@
 package serial;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
 
 public class Receiver {
 	
+	public static boolean objCreated = false;
+	
 	public static void main(String[] args) throws IOException {
-		ServerSocket socket = new ServerSocket(Sender.port);
+		int port = 9000;
+		ServerSocket socket = new ServerSocket(port);
 		System.out.println("Server 'receiver' initialized");
-		int ch;
 		
 		while(true) {
+			// wait for client
 			Socket connection = socket.accept();
+			System.out.println("Received connection from client");
 			
-			BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
-			InputStreamReader ir = new InputStreamReader(is);
-			StringBuffer buf = new StringBuffer();
-			
-			// read input stream 
-			while((ch=ir.read())!=13)
-				buf.append((char) ch);
-			
-			System.out.println(buf);
-			
-			String resp = "Server 'receiver' responded" + (char) 13;
+			InputStream is = connection.getInputStream();
+			SAXBuilder parser = new SAXBuilder();
+			Document doc=null;
+			try {
+				doc = parser.build(is);
+				// deserialize the code
+				// visualize it
+			} catch (JDOMException e) {}
+			is.close();
+
+			String resp = "Server 'receiver' got object. Printing..." + (char) 13;
+
+			if(doc!=null) {
+				XMLOutputter xml = new XMLOutputter();
+				xml.output(doc,System.out);
+			}
 			BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
-			OutputStreamWriter ow = new OutputStreamWriter(os, "US-ASCII");
+			OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8");
 			ow.write(resp);
 			ow.flush();
+			connection.close();
 		}
 		
 		
