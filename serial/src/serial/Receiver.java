@@ -28,12 +28,18 @@ public class Receiver {
 			
 			InputStream is = connection.getInputStream();
 			SAXBuilder parser = new SAXBuilder();
+			Inspector inspect = new Inspector();
+			Deserializer ds = new Deserializer();
 			Document doc=null;
 			try {
 				doc = parser.build(is);
-				// deserialize the code
-				// visualize it
-			} catch (JDOMException e) {}
+				Object ob = ds.deserialize(doc);
+				inspect.inspect(ob,false);
+				
+			} catch (JDOMException e) {} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			is.close();
 
 			String resp = "Server 'receiver' got object. Printing..." + (char) 13;
