@@ -11,19 +11,17 @@ public class Tests {
 	
 	@Test
 	public void test_Job_createJob() {
-		Job drk = new Job("drk", "tank", 50);
+		Job drk = new Job("drk", 50);
 		
 		assertEquals("drk", drk.getName());
-		assertEquals("tank", drk.getRole());
 		assertEquals(50, drk.getLevel());
 	}
 	
 	@Test
 	public void test_Job_negativeLevel() {
 		String name = "drk";
-		String role = "tank";
 		int level = -10;
-		Job drk = new Job(name,role,level);
+		Job drk = new Job(name,level);
 		
 		assertEquals(1, drk.getLevel());
 	}
@@ -38,7 +36,7 @@ public class Tests {
 	
 	@Test
 	public void test_Player_createPlayerWithJobArray() {
-		Job drk = new Job("drk", "tank", 50);
+		Job drk = new Job("drk", 50);
 		ArrayList<Job> js = new ArrayList<Job>();
 		js.add(drk);
 		Player noct = new Player("Noctis", js);
@@ -49,7 +47,7 @@ public class Tests {
 	
 	@Test
 	public void test_Player_addOneJob() {
-		Job drk = new Job("drk", "tank", 50);
+		Job drk = new Job("drk", 50);
 		Player noct = new Player("Noctis");
 		noct.addJob(drk);
 		
@@ -58,9 +56,9 @@ public class Tests {
 	
 	@Test
 	public void test_Player_addMultipleJobs() {
-		Job drk = new Job("drk", "tank", 50);
-		Job ast = new Job("ast", "healer", 50);
-		Job rdm = new Job("rdm", "dps", 20);
+		Job drk = new Job("drk", 50);
+		Job ast = new Job("ast",50);
+		Job rdm = new Job("rdm",20);
 		Player noct = new Player("Noctis");
 		noct.addJob(drk);
 		noct.addJob(ast);
@@ -71,9 +69,9 @@ public class Tests {
 	
 	@Test
 	public void test_Player_addTheSameJob() {
-		Job drk = new Job("drk", "tank", 50);
-		Job ast = new Job("ast", "healer", 50);
-		Job rdm = new Job("rdm", "dps", 20);
+		Job drk = new Job("drk", 50);
+		Job ast = new Job("ast", 50);
+		Job rdm = new Job("rdm",20);
 		Player noct = new Player("Noctis");
 		noct.addJob(drk);
 		noct.addJob(ast);
@@ -85,9 +83,9 @@ public class Tests {
 	
 	@Test
 	public void test_Player_removeJobs() {
-		Job drk = new Job("drk", "tank", 50);
-		Job ast = new Job("ast", "healer", 50);
-		Job rdm = new Job("rdm", "dps", 20);
+		Job drk = new Job("drk", 50);
+		Job ast = new Job("ast",  50);
+		Job rdm = new Job("rdm", 20);
 		Player noct = new Player("Noctis");
 		noct.addJob(drk);
 		noct.addJob(ast);
@@ -137,7 +135,7 @@ public class Tests {
 	@Test
 	public void test_ILevels_createILevels_array8() {
 		int[] lv = {1,2,3,4,5,6,7,8};
-		ILevels ilv = new ILevels(lv);
+		Ilevels ilv = new Ilevels(lv);
 		
 		for(int i=0;i<ilv.getILevels().length;i++)
 			assertEquals(lv[i], ilv.getPlayerIlevel(i));
@@ -146,7 +144,7 @@ public class Tests {
 	@Test
 	public void test_ILevels_createILevels_array2() {
 		int[] lv = {1,2};
-		ILevels ilv = new ILevels(lv);
+		Ilevels ilv = new Ilevels(lv);
 		
 		assertEquals(lv[0], ilv.getPlayerIlevel(0));
 		assertEquals(lv[1], ilv.getPlayerIlevel(1));
@@ -157,7 +155,7 @@ public class Tests {
 	@Test
 	public void test_ILevels_createILevels_array10() {
 		int[] lv = {1,2,3,4,5,6,7,8,9,10};
-		ILevels ilv = new ILevels(lv);
+		Ilevels ilv = new Ilevels(lv);
 
 		for(int i=0;i<ilv.getILevels().length;i++)
 			assertEquals(lv[i], ilv.getPlayerIlevel(i));

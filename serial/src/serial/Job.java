@@ -5,12 +5,10 @@ public class Job {
 	// class containing primitives
 	
 	private String name;
-	private String role;
 	private int level;
 
 	public Job() {
 		name = "";
-		role = "";
 		level = -1;
 	}
 	
@@ -19,19 +17,14 @@ public class Job {
 	 * @param r : role
 	 * @param l : level
 	 */
-	public Job(String n, String r, int l) {
+	public Job(String n, int l) {
 		setName(n);
-		setRole(r);
 		setLevel(l);
 	}
 	
 	public void setName(String n) { name = n; }
 	
 	public String getName() { return name; }
-	
-	public void setRole(String r) { role = r; }
-	
-	public String getRole( ) { return role; }
 	
 	public void setLevel(int l) { 
 		if(l>=0)

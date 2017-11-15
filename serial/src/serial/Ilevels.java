@@ -1,13 +1,13 @@
 
 package serial;
 
-public class ILevels {
+public class Ilevels {
 	
 	// class containing array of primitives
 	private final int MAX = 8;
 	private int[] players = new int[MAX];
 	
-	public ILevels() {
+	public Ilevels() {
 		for(int ilvl : players)
 			ilvl = -1;
 	}
@@ -15,7 +15,7 @@ public class ILevels {
 	/**
 	 * @param ilvls : array of max length 8
 	 */
-	public ILevels(int[] ilvls) {
+	public Ilevels(int[] ilvls) {
 		if(ilvls.length>MAX) {
 			for(int i=0;i<players.length;i++)
 				players[i] = ilvls[i];
