@@ -37,6 +37,9 @@ public class Creator {
 	private JTextField all_partyText1;
 	private JTextField all_partyText2;
 	private JTextField all_partyText3;
+	private JTextField player_nameText;
+	private JTextField player_jobLevel1;
+	private JTextField player_jobLevel2;
 
 	/**
 	 * Create the application.
@@ -86,6 +89,50 @@ public class Creator {
 		JPanel panel_empty = new JPanel();
 		cardsPanel.add(panel_empty, "empty");
 		
+		JPanel panel_player = new JPanel();
+		cardsPanel.add(panel_player, "Player");
+		panel_player.setLayout(null);
+		
+		JLabel player_nameLabel = new JLabel("Player Name :");
+		player_nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		player_nameLabel.setBounds(0, 11, 100, 14);
+		panel_player.add(player_nameLabel);
+		
+		player_nameText = new JTextField();
+		player_nameText.setBounds(110, 8, 100, 20);
+		panel_player.add(player_nameText);
+		player_nameText.setColumns(10);
+		
+		JLabel player_jobLabel1 = new JLabel("Job (name, lvl) :");
+		player_jobLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
+		player_jobLabel1.setBounds(0, 42, 100, 14);
+		panel_player.add(player_jobLabel1);
+		
+		player_jobLevel1 = new JTextField();
+		player_jobLevel1.setBounds(220, 39, 86, 20);
+		panel_player.add(player_jobLevel1);
+		player_jobLevel1.setColumns(10);
+		
+		JLabel player_jobLabel2 = new JLabel("Job (name, lvl) :");
+		player_jobLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
+		player_jobLabel2.setBounds(0, 69, 100, 14);
+		panel_player.add(player_jobLabel2);
+		
+		player_jobLevel2 = new JTextField();
+		player_jobLevel2.setColumns(10);
+		player_jobLevel2.setBounds(220, 66, 86, 20);
+		panel_player.add(player_jobLevel2);
+		
+		JComboBox player_jobName1 = new JComboBox();
+		player_jobName1.setModel(new DefaultComboBoxModel(new String[] {"Arcanist", "Archer", "Conjurer", "Gladiator", "Marauder", "Pugilist", "Rogue", "Thaumaturge"}));
+		player_jobName1.setBounds(110, 39, 96, 20);
+		panel_player.add(player_jobName1);
+		
+		JComboBox player_jobName2 = new JComboBox();
+		player_jobName2.setModel(new DefaultComboBoxModel(new String[] {"Arcanist", "Archer", "Conjurer", "Gladiator", "Marauder", "Pugilist", "Rogue", "Thaumaturge"}));
+		player_jobName2.setBounds(110, 66, 96, 20);
+		panel_player.add(player_jobName2);
+		
 		JPanel panel_alliance = new JPanel();
 		cardsPanel.add(panel_alliance, "Alliance");
 		panel_alliance.setLayout(null);
@@ -120,8 +167,8 @@ public class Creator {
 		all_partyText3.setBounds(110, 57, 201, 20);
 		panel_alliance.add(all_partyText3);
 		
-		JLabel all_note = new JLabel("<html>Each party can have max. 4 player names,<br>\r\neach name is separated by a single space");
-		all_note.setBounds(73, 59, 331, 88);
+		JLabel all_note = new JLabel("<html>Each party can have max. 4 player names, each name separated by a space<br>\r\nOrder goes [tank] [healer] [dps1] [dps2].<br>\r\nIf you wish to leave a role blank, write \"null\".");
+		all_note.setBounds(10, 73, 414, 88);
 		panel_alliance.add(all_note);
 
 
@@ -138,7 +185,7 @@ public class Creator {
 		JComboBox job_nameBox = new JComboBox();
 		job_nameBox.setBounds(98, 35, 150, 20);
 		panel_job.add(job_nameBox);
-		job_nameBox.setModel(new DefaultComboBoxModel(new String[] {"", "Arcanist", "Archer", "Conjurer", "Gladiator", "Marauder", "Pugilist", "Rogue", "Thaumaturge"}));
+		job_nameBox.setModel(new DefaultComboBoxModel(new String[] {"Arcanist", "Archer", "Conjurer", "Gladiator", "Marauder", "Pugilist", "Rogue", "Thaumaturge"}));
 
 		JLabel job_levelLabel = new JLabel("Level :");
 		job_levelLabel.setBounds(0, 63, 90, 14);
@@ -216,7 +263,7 @@ public class Creator {
 		panel_ilevel.add(ilvl_text);
 		ilvl_text.setColumns(10);
 		
-		JLabel ilvl_note = new JLabel("<html>Note:<br>\r\niLevel list may only contain up to 8 items, separated by a single space.<br>\r\nOrder goes [tank] [healer] [dps1] [dps2]<br>\r\nIf you wish to leave a role blank write \"null\"");
+		JLabel ilvl_note = new JLabel("<html>Note:<br>\r\niLevel list may only contain up to 8 integers, separated by a single space.<br>");
 		ilvl_note.setBounds(29, 23, 377, 90);
 		panel_ilevel.add(ilvl_note);
 		
@@ -241,12 +288,15 @@ public class Creator {
 				}
 				else if(selstr.contains("Alliance"))
 					c.show(cardsPanel, "Alliance");
+				
+				else if(selstr.contains("Player"))
+					c.show(cardsPanel, "Player");
 				else 
 					c.show(cardsPanel, "empty");
 			}
 		});
 		selectClassBox.setBounds(10, 30, 414, 28);
-		selectClassBox.setMaximumRowCount(5);
+		selectClassBox.setMaximumRowCount(6);
 		selectClassBox.setModel(new DefaultComboBoxModel(new String[] {"", "Job : contains only primitives", "Party : contains object references", "Ilevels : contains an array of primitives", "Alliance : contains an array of object references", "Player : contains a collection of object references"}));
 		selectClassBox.setToolTipText("");
 		frmObjectCreator.getContentPane().add(selectClassBox);
@@ -299,6 +349,14 @@ public class Creator {
 					all_partyText2.setText("");
 					all_partyText3.setText("");
 					
+				} else if(selstr.contains("Player")) {
+					String name = player_nameText.getText();
+					String job1 = player_jobName1.getSelectedItem().toString();
+					String job2 = player_jobName2.getSelectedItem().toString();
+					String lvl1 = player_jobLevel1.getText();
+					String lvl2 = player_jobLevel2.getText();
+					
+					msg = setPlayerFields(name, job1, lvl1, job2, lvl2);
 				} else // user clicked confirm when no class was chosen
 					msg = "<html>ERROR : you have not chosen a class to create";
 				
@@ -311,9 +369,11 @@ public class Creator {
 		buttonEnter.setBounds(162, 332, 89, 23);
 		frmObjectCreator.getContentPane().add(buttonEnter);
 	}
+
+
 	
 	private String setJobFields(String name, String levelstr) {
-		String msg = "<html>Object creation unsuccessful, please resolve the following:";;
+		String msg = "<html>";
 		
 		int level = 0;
 		if(levelstr.matches("\\d+")) {
@@ -325,11 +385,7 @@ public class Creator {
 			Sender.objects.add(new Job(name,level));
 			msg = "<html>OK : created a Job object!";
 		} else {
-			
-			if(name.equals(""))
-				msg += "<br>ERROR : name field is empty";
-			if(!levelOK)
-				msg += "<br>ERROR : level field must be an integer between 1 and 100";
+			msg += "<br>ERROR : level field must be an integer between 1 and 100";
 		}
 		return msg;
 	}
@@ -405,6 +461,40 @@ public class Creator {
 				msg = "<html>OK : created an ILevel object!";
 			}
 		} catch(PatternSyntaxException e) {}
+		return msg;
+	}
+	
+	protected String setPlayerFields(String name, String job1, String lvl1, String job2, String lvl2) {
+		String msg = "<html>";
+		ArrayList<Job> js = new ArrayList<Job>();
+		
+		int l1 = 0;
+		int l2 = 0;
+		if(lvl1.matches("\\d+")) {
+			l1 = Integer.parseInt(lvl1);
+		}
+		if(lvl2.matches("\\d+")) {
+			l2 = Integer.parseInt(lvl2);
+		}
+		
+		boolean lv1OK = (l1>=1) && (l2<=100);
+		boolean lv2OK = (l2>=1) && (l2<=100);
+		
+		if(name.equals(""))
+			msg += "ERROR : name field is empty<br>";
+		if(lv1OK) 
+			js.add(new Job(job1, l1));
+		else 
+			msg += "ERROR : missing level on job 1<br>";
+		if(lv2OK)
+			js.add(new Job(job2, l2));
+		else
+			msg += "ERROR : missing level on job 2<br>";
+
+		if(!name.equals("") && lv1OK && lv2OK) {
+			Sender.objects.add(new Player(name, js));
+			msg = "<html>OK : created a Job object!";		
+		}	
 		return msg;
 	}
 }
