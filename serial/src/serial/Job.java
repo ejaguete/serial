@@ -27,7 +27,7 @@ public class Job {
 	public String getName() { return name; }
 	
 	public void setLevel(int l) { 
-		if(l>=0)
+		if(l>=1)
 			level = l;
 		else
 			level = 1;

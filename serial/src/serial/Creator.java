@@ -21,12 +21,13 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import java.awt.CardLayout;
 
 public class Creator {
 
 	private JFrame frmObjectCreator;
 	private JTextField job_levelText;
-	private ArrayList<Object> fieldValues = new ArrayList<Object>();
+	private ArrayList<Object> objects = new ArrayList<Object>();
 
 	/**
 	 * Launch the application.
@@ -57,7 +58,7 @@ public class Creator {
 	private void initialize() {
 		frmObjectCreator = new JFrame();
 		frmObjectCreator.setTitle("Object Creator");
-		frmObjectCreator.setBounds(100, 100, 450, 300);
+		frmObjectCreator.setBounds(100, 100, 450, 405);
 		frmObjectCreator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmObjectCreator.getContentPane().setLayout(null);
 		
@@ -66,14 +67,40 @@ public class Creator {
 		classLabel.setLabelFor(frmObjectCreator);
 		classLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		frmObjectCreator.getContentPane().add(classLabel);
+		
+		JLabel fieldLabel = new JLabel("Fill in the appropriate fields:");
+		fieldLabel.setBounds(10, 69, 262, 14);
+		frmObjectCreator.getContentPane().add(fieldLabel);
+		fieldLabel.setVisible(false);
 
-		// JOB PANEL
+		
+		JLabel consoleLabel = new JLabel("Console");
+		consoleLabel.setBounds(10, 216, 46, 14);
+		frmObjectCreator.getContentPane().add(consoleLabel);
+		
+		JLabel consoleText = new JLabel("");
+		consoleText.setVerticalAlignment(SwingConstants.TOP);
+		consoleText.setHorizontalAlignment(SwingConstants.LEFT);
+		consoleText.setBounds(10, 241, 414, 80);
+		frmObjectCreator.getContentPane().add(consoleText);
+		
+		
+		JPanel cardsPanel = new JPanel();
+		cardsPanel.setBounds(10, 86, 414, 124);
+		frmObjectCreator.getContentPane().add(cardsPanel);
+		cardsPanel.setLayout(new CardLayout(0, 0));
+
+		JPanel panel_empty = new JPanel();
+		cardsPanel.add(panel_empty, "empty");
+		
+		JPanel panel_party = new JPanel();
+		cardsPanel.add(panel_party, "Party");
+
 
 		JPanel panel_job = new JPanel();
-		panel_job.setBounds(10, 94, 414, 112);
-		frmObjectCreator.getContentPane().add(panel_job);
-		panel_job.setLayout(null);
+		cardsPanel.add(panel_job, "Job");
 		panel_job.setVisible(false);
+		panel_job.setLayout(null);
 
 		JLabel job_nameLabel = new JLabel("Name :");
 		job_nameLabel.setBounds(0, 14, 61, 14);
@@ -95,13 +122,6 @@ public class Creator {
 		panel_job.add(job_levelText);
 		job_levelText.setColumns(10);
 		
-		// END : JOB PANEL
-		
-		JLabel fieldLabel = new JLabel("Fill in the appropriate fields:");
-		fieldLabel.setBounds(10, 69, 262, 14);
-		frmObjectCreator.getContentPane().add(fieldLabel);
-		fieldLabel.setVisible(false);
-
 		JComboBox selectClassBox = new JComboBox();
 		selectClassBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -111,10 +131,11 @@ public class Creator {
 				else
 					fieldLabel.setVisible(false);
 				
+				CardLayout c = (CardLayout) (cardsPanel.getLayout());
 				if(selstr.contains("Job")){
-					panel_job.setVisible(true);
+					c.show(cardsPanel, "Job");
 				} else {
-					panel_job.setVisible(false);
+					c.show(cardsPanel, "empty");
 				}
 			}
 		});
@@ -127,12 +148,44 @@ public class Creator {
 		JButton buttonEnter = new JButton("Confirm");
 		buttonEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String job = job_nameBox.getSelectedItem().toString();
-				int level = Integer.parseInt(job_levelText.getText());
-		
+				
+				String selstr = selectClassBox.getSelectedItem().toString();
+				if(selstr.contains("Job")) {
+					String name = job_nameBox.getSelectedItem().toString();
+					String levelstr = job_levelText.getText();
+					String msg;
+					
+					int level = 0;
+					if(levelstr.matches("\\d+")) {
+						level = Integer.parseInt(levelstr);
+					}
+					
+					boolean levelOK = (level>=1) && (level<=100);
+					if(!name.equals("") && levelOK) {
+						objects.add(new Job(name,level));
+						msg = "<html>Successfully created a Job object!<br>";
+						msg += "Name : " + name + "<br>";
+						msg += "Level : " + level + "<br>";
+						// reset fields
+						job_nameBox.setSelectedIndex(0);
+						job_levelText.setText("");
+					} else {
+						msg = "<html>Errors!<br>";
+						if(name.equals(""))
+							msg += "- Name field is empty<br>";
+						if(!levelOK)
+							msg += "- Level field must be an integer between 1 and 100<br>";
+						msg += "<br>Object creation was unsuccessful. Please resolve these errors.";
+					}
+					consoleText.setText(msg);
+				}
 			}
 		});
-		buttonEnter.setBounds(165, 217, 89, 23);
+		
+		buttonEnter.setBounds(162, 332, 89, 23);
 		frmObjectCreator.getContentPane().add(buttonEnter);
+		
+
+
 	}
 }
