@@ -15,6 +15,8 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.PatternSyntaxException;
 import java.awt.event.ActionEvent;
 import javax.swing.JDesktopPane;
 import java.awt.Color;
@@ -25,30 +27,16 @@ import java.awt.CardLayout;
 
 public class Creator {
 
-	private JFrame frmObjectCreator;
+	JFrame frmObjectCreator;
 	private JTextField job_levelText;
-	private ArrayList<Object> objects = new ArrayList<Object>();
 	private JTextField party_tankText;
 	private JTextField party_healText;
 	private JTextField party_d1Text;
 	private JTextField party_d2Text;
-	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Creator window = new Creator();
-					window.frmObjectCreator.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextField ilvl_text;
+	private JTextField all_partyText1;
+	private JTextField all_partyText2;
+	private JTextField all_partyText3;
 
 	/**
 	 * Create the application.
@@ -80,23 +68,61 @@ public class Creator {
 
 		
 		JLabel consoleLabel = new JLabel("Console");
-		consoleLabel.setBounds(10, 216, 46, 14);
+		consoleLabel.setBounds(10, 244, 46, 14);
 		frmObjectCreator.getContentPane().add(consoleLabel);
 		
 		JLabel consoleText = new JLabel("");
 		consoleText.setVerticalAlignment(SwingConstants.TOP);
 		consoleText.setHorizontalAlignment(SwingConstants.LEFT);
-		consoleText.setBounds(10, 235, 414, 86);
+		consoleText.setBounds(10, 259, 414, 62);
 		frmObjectCreator.getContentPane().add(consoleText);
 		
 		
 		JPanel cardsPanel = new JPanel();
-		cardsPanel.setBounds(10, 86, 414, 124);
+		cardsPanel.setBounds(10, 86, 414, 147);
 		frmObjectCreator.getContentPane().add(cardsPanel);
 		cardsPanel.setLayout(new CardLayout(0, 0));
 
 		JPanel panel_empty = new JPanel();
 		cardsPanel.add(panel_empty, "empty");
+		
+		JPanel panel_alliance = new JPanel();
+		cardsPanel.add(panel_alliance, "Alliance");
+		panel_alliance.setLayout(null);
+		
+		JLabel all_partyLabel1 = new JLabel("Party A :");
+		all_partyLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
+		all_partyLabel1.setBounds(0, 11, 100, 14);
+		panel_alliance.add(all_partyLabel1);
+		
+		all_partyText1 = new JTextField();
+		all_partyText1.setBounds(110, 8, 201, 20);
+		panel_alliance.add(all_partyText1);
+		all_partyText1.setColumns(10);
+		
+		JLabel all_partyLabel2 = new JLabel("Party B :");
+		all_partyLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
+		all_partyLabel2.setBounds(0, 35, 100, 14);
+		panel_alliance.add(all_partyLabel2);
+		
+		all_partyText2 = new JTextField();
+		all_partyText2.setColumns(10);
+		all_partyText2.setBounds(110, 32, 201, 20);
+		panel_alliance.add(all_partyText2);
+		
+		JLabel all_partyLabel3 = new JLabel("Party C :");
+		all_partyLabel3.setHorizontalAlignment(SwingConstants.RIGHT);
+		all_partyLabel3.setBounds(0, 60, 100, 14);
+		panel_alliance.add(all_partyLabel3);
+		
+		all_partyText3 = new JTextField();
+		all_partyText3.setColumns(10);
+		all_partyText3.setBounds(110, 57, 201, 20);
+		panel_alliance.add(all_partyText3);
+		
+		JLabel all_note = new JLabel("<html>Each party can have max. 4 player names,<br>\r\neach name is separated by a single space");
+		all_note.setBounds(73, 59, 331, 88);
+		panel_alliance.add(all_note);
 
 
 		JPanel panel_job = new JPanel();
@@ -182,17 +208,17 @@ public class Creator {
 		
 		JLabel ilvl_label = new JLabel("List of iLevels :");
 		ilvl_label.setHorizontalAlignment(SwingConstants.RIGHT);
-		ilvl_label.setBounds(0, 47, 100, 14);
+		ilvl_label.setBounds(0, 11, 100, 14);
 		panel_ilevel.add(ilvl_label);
 		
-		textField = new JTextField();
-		textField.setBounds(102, 44, 200, 20);
-		panel_ilevel.add(textField);
-		textField.setColumns(10);
+		ilvl_text = new JTextField();
+		ilvl_text.setBounds(104, 8, 200, 20);
+		panel_ilevel.add(ilvl_text);
+		ilvl_text.setColumns(10);
 		
-		JLabel lblNewLabel = new JLabel("*iLevel list may only contain up to 8 items");
-		lblNewLabel.setBounds(102, 71, 216, 14);
-		panel_ilevel.add(lblNewLabel);
+		JLabel ilvl_note = new JLabel("<html>Note:<br>\r\niLevel list may only contain up to 8 items, separated by a single space.<br>\r\nOrder goes [tank] [healer] [dps1] [dps2]<br>\r\nIf you wish to leave a role blank write \"null\"");
+		ilvl_note.setBounds(29, 23, 377, 90);
+		panel_ilevel.add(ilvl_note);
 		
 		JComboBox selectClassBox = new JComboBox();
 		selectClassBox.addActionListener(new ActionListener() {
@@ -210,9 +236,11 @@ public class Creator {
 				else if(selstr.contains("Party")) 
 					c.show(cardsPanel, "Party");
 				
-				else if(selstr.contains("ILevel"))
+				else if(selstr.contains("Ilevels")) {
 					c.show(cardsPanel, "ilvl");
-				
+				}
+				else if(selstr.contains("Alliance"))
+					c.show(cardsPanel, "Alliance");
 				else 
 					c.show(cardsPanel, "empty");
 			}
@@ -227,69 +255,156 @@ public class Creator {
 		buttonEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String msg;
+				
 				String selstr = selectClassBox.getSelectedItem().toString();
 				
 				if(selstr.contains("Job")) {
 					String name = job_nameBox.getSelectedItem().toString();
 					String levelstr = job_levelText.getText();
 					
-					int level = 0;
-					if(levelstr.matches("\\d+")) {
-						level = Integer.parseInt(levelstr);
-					}
+					msg = setJobFields(name,levelstr);
 					
-					boolean levelOK = (level>=1) && (level<=100);
-					if(!name.equals("") && levelOK) {
-						objects.add(new Job(name,level));
-						msg = "<html>OK : created a Job object!<br>";
-						// reset fields
-						job_nameBox.setSelectedIndex(0);
-						job_levelText.setText("");
-					} else {
-						msg = "<html>Object creation unsuccessful, please resolve the following:";
-						if(name.equals(""))
-							msg += "<br>ERROR : name field is empty";
-						if(!levelOK)
-							msg += "<br>ERROR : level field must be an integer between 1 and 100";
-					}
+					// reset fields
+					job_nameBox.setSelectedIndex(0);
+					job_levelText.setText("");	
+					
 				} else if(selstr.contains("Party")) {
 					String t = party_tankText.getText();
 					String h = party_healText.getText();
 					String d1 = party_d1Text.getText();
 					String d2 = party_d2Text.getText();
 					
-					Player tank = null;
-					Player heal = null;
-					Player dps1 = null;
-					Player dps2 = null;
+					//reset fields
+					msg = setPartyFields(t,h,d1,d2);
+					party_tankText.setText("");
+					party_healText.setText("");
+					party_d1Text.setText("");
+					party_d2Text.setText("");
 					
-					if(!t.equals("")) 
-						tank = new Player(t);
-					if(!h.equals(""))
-						heal = new Player(h);
-					if(!d1.equals(""))
-						dps1 = new Player(d1);
-					if(!d2.equals(""))
-						dps2 = new Player(d2);
+				} else if(selstr.contains("Ilevel")) {
+					String list = ilvl_text.getText();
+					msg = setIlvlFields(list);
 					
-					objects.add(new Party(tank,heal,dps1,dps2));
-					msg = "<html>OK : created a Party object!";
+					//reset field
+					ilvl_text.setText("");
 					
-					if((tank==null) || (heal==null) || dps1==null || dps2==null)
-						msg += "<br>CAUTION : one or more party member slots are empty";
+				} else if(selstr.contains("Alliance")) {
+					String p1 = all_partyText1.getText();
+					String p2 = all_partyText2.getText();
+					String p3 = all_partyText3.getText();
+					msg = setAllianceFields(new String[] {p1,p2,p3});
+					
+					//reset fields
+					all_partyText1.setText("");
+					all_partyText2.setText("");
+					all_partyText3.setText("");
 					
 				} else // user clicked confirm when no class was chosen
 					msg = "<html>ERROR : you have not chosen a class to create";
 				
-				msg += "<br>Number of objects created: " + objects.size();
+				System.out.println(Sender.objects.size());
+				msg += "<br># objects created: " + Sender.objects.size();
 				consoleText.setText(msg);
 			}
 		});
 		
 		buttonEnter.setBounds(162, 332, 89, 23);
 		frmObjectCreator.getContentPane().add(buttonEnter);
+	}
+	
+	private String setJobFields(String name, String levelstr) {
+		String msg = "<html>Object creation unsuccessful, please resolve the following:";;
 		
-
-
+		int level = 0;
+		if(levelstr.matches("\\d+")) {
+			level = Integer.parseInt(levelstr);
+		}
+		
+		boolean levelOK = (level>=1) && (level<=100);
+		if(!name.equals("") && levelOK) {
+			Sender.objects.add(new Job(name,level));
+			msg = "<html>OK : created a Job object!";
+		} else {
+			
+			if(name.equals(""))
+				msg += "<br>ERROR : name field is empty";
+			if(!levelOK)
+				msg += "<br>ERROR : level field must be an integer between 1 and 100";
+		}
+		return msg;
+	}
+	
+	private String setPartyFields(String t, String h, String d1, String d2) {
+		String msg;
+		
+		Player tank = null;
+		Player heal = null;
+		Player dps1 = null;
+		Player dps2 = null;
+		
+		if(!t.equals("")) 
+			tank = new Player(t);
+		if(!h.equals(""))
+			heal = new Player(h);
+		if(!d1.equals(""))
+			dps1 = new Player(d1);
+		if(!d2.equals(""))
+			dps2 = new Player(d2);
+		
+		Sender.objects.add(new Party(tank,heal,dps1,dps2));
+		msg = "<html>OK : created a Party object!";
+		
+		if((tank==null) || (heal==null) || dps1==null || dps2==null)
+			msg += "<br>CAUTION : one or more party member slots are empty";
+		
+		return msg;
+	}
+	
+	private String setIlvlFields(String list) {
+		String msg = "ERROR : something is wrong with your list";
+		try {
+			String[] split = list.split("\\s+");
+			int[] ilvls = new int[split.length];
+			for (int i=0;i<ilvls.length;i++) {
+				ilvls[i] = Integer.parseInt(split[i]);
+			}
+			Sender.objects.add(new Ilevels(ilvls));
+			msg = "<html>OK : created an ILevel object!";
+		} catch(PatternSyntaxException e) {}
+		return msg;
+	}
+	
+	private String setAllianceFields(String[] parties) {
+		String msg = "<html>ERROR : something is wrong with one or more lists";
+		Player tank = null;
+		Player heal = null;
+		Player dps1 = null;
+		Player dps2 = null;
+		Party[] ps = new Party[3];
+		
+		try {
+			for(int i=0;i<3;i++) {
+				String[] split = parties[i].split("\\s+");
+				if(split.length==4) {
+					if(split[0]!="null")
+						tank = new Player(split[0]);
+					if(split[1]!="null")
+						heal = new Player(split[1]);
+					if(split[2]!="null")
+						dps1 = new Player(split[2]);
+					if(split[3]!="null")
+						dps2 = new Player(split[3]);
+					
+					ps[i] = new Party(tank,heal,dps1,dps2);
+				} else {
+					break;
+				}
+			}
+			if(ps[0]!=null && ps[1]!=null && ps[2]!=null) {
+				Sender.objects.add(new Alliance(ps[0],ps[1],ps[2]));
+				msg = "<html>OK : created an ILevel object!";
+			}
+		} catch(PatternSyntaxException e) {}
+		return msg;
 	}
 }
