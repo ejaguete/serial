@@ -52,13 +52,16 @@ public class Deserializer {
 					Field field = declaringClass.getDeclaredField(fieldName);
 					if(!Modifier.isPublic(field.getModifiers()))
 						field.setAccessible(true);
+					// added after submission
+					// reset modifier in case it's final
+					field.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 					Element ve = (Element) fe.getChildren().get(0);
 					field.set(inst, value(ve,field.getType()));
 				}
 			} else {
 				Class comptype = inst.getClass().getComponentType();
-				for(Object a : objects) 
-					Array.set(inst, objects.indexOf(a), value((Element) fes.get(objects.indexOf(a)), comptype));
+				for(Object a : fes) 
+					Array.set(inst, fes.indexOf(a), value((Element) fes.get(objects.indexOf(a)), comptype));
 			}
 			
 		}

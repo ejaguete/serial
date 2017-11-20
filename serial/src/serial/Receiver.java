@@ -10,6 +10,7 @@ import java.net.Socket;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 public class Receiver {
@@ -19,39 +20,39 @@ public class Receiver {
 	public static void main(String[] args) throws IOException {
 		int port = 9000;
 		ServerSocket socket = new ServerSocket(port);
-		System.out.println("Server 'receiver' initialized");
+		System.out.println("RECEIVER : server initialized");
 		
 		while(true) {
 			// wait for client
 			Socket connection = socket.accept();
-			System.out.println("Received connection from client");
+			System.out.println("RECEIVER : received connection from client");
 			
 			InputStream is = connection.getInputStream();
 			SAXBuilder parser = new SAXBuilder();
 			Inspector inspect = new Inspector();
 			Deserializer ds = new Deserializer();
 			Document doc=null;
+			System.out.println("RECEIVER : attempting to deserialize...");
 			try {
+
 				doc = parser.build(is);
+				System.out.println("RECEIVER : deserializing...");
 				Object ob = ds.deserialize(doc);
+				XMLOutputter out = new XMLOutputter();
+				out.setFormat(Format.getPrettyFormat());
+				out.output(doc, System.out);
+				/*
+				System.out.println("RECEIVER : inspecting...");
 				inspect.inspect(ob,false);
+				*/
 				
-			} catch (JDOMException e) {} 
-			catch (Exception e) {
+			} catch (JDOMException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			is.close();
-
-			String resp = "Server 'receiver' got object. Printing..." + (char) 13;
-
-			if(doc!=null) {
-				XMLOutputter xml = new XMLOutputter();
-				xml.output(doc,System.out);
-			}
-			BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
-			OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8");
-			ow.write(resp);
-			ow.flush();
+			
 			connection.close();
 		}
 		

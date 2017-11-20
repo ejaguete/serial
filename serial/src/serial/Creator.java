@@ -362,6 +362,7 @@ public class Creator {
 		buttonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Sender.finished = true;
+				System.out.println("CREATOR : done creating objects");
 			}
 		});
 		buttonCreate.setBounds(277, 332, 132, 23);
@@ -424,7 +425,9 @@ public class Creator {
 			}
 			Sender.objects.add(new Ilevels(ilvls));
 			msg = "<html>OK : created an ILevel object!";
-		} catch(PatternSyntaxException e) {}
+		} catch(PatternSyntaxException e) {
+			return msg;
+		}
 		return msg;
 	}
 	
@@ -458,7 +461,9 @@ public class Creator {
 				Sender.objects.add(new Alliance(ps[0],ps[1],ps[2]));
 				msg = "<html>OK : created an ILevel object!";
 			}
-		} catch(PatternSyntaxException e) {}
+		} catch(PatternSyntaxException e) {
+			return msg;
+		}
 		return msg;
 	}
 	
