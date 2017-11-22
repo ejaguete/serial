@@ -1,8 +1,6 @@
 package serial;
 
 import java.awt.EventQueue;
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -13,29 +11,29 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 public class Sender {
-	
+
 	public static ArrayList<Object> objects = new ArrayList<Object>();
 	public static boolean finished = false;
-	
+
 	/**
 	 * Launch the application.
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		
+
 		// create objects & store in array
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Creator window = new Creator();
 					window.frmObjectCreator.setVisible(true);
-			
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		
+
 		// wait for user to create objects
 		while(true) {
 			System.out.println("...");
@@ -44,42 +42,38 @@ public class Sender {
 				break;
 		}
 		
-		if(finished)
-			System.out.println("SENDER : confirmed objects created");
-		System.out.println("SENDER : object created. Sending...");
-		
+		System.out.println("SENDER : objects created. Sending...");
+	
 		String host = "localhost";
 		int port = 9000;
 		System.out.println("SENDER : client initialized");
+		
+		 
 		Serializer s = new Serializer();
 		// request socket connection
 		try {
+			
 			InetAddress address = InetAddress.getByName(host);
 			Socket connection = new Socket(address, port);
 			OutputStream os = connection.getOutputStream();
-
 			
-			// write to socket
-			for(Object o : objects) {
-				Document doc = s.serialize(o);
-				try {
-					XMLOutputter out = new XMLOutputter();
-					out.setFormat(Format.getPrettyFormat());
-					out.output(doc, os);
-					os.flush();
-					
-				} finally {}
-		
-			StringBuffer buf = new StringBuffer();
-			// read from server socket
-			//BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
-			//InputStreamReader ir = new InputStreamReader(is, "UTF-8");
-
+			Document doc = null;
 			
-			//System.out.println(buf);
+
+			// serialize objects
+			for(Object o : objects)
+				doc = s.serialize(o);
+
+			try {
+				XMLOutputter out = new XMLOutputter();
+				out.setFormat(Format.getPrettyFormat());
+				out.output(doc, os);
+				
+			} finally {
+				os.flush();
+				connection.close();
 			}
-			connection.close();
-	} finally {}
 
+		} finally {}
 	}
 }

@@ -9,64 +9,89 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 public class Deserializer {
-	Map table = new HashMap();
+	@SuppressWarnings("rawtypes")
+	public Map table = new HashMap();
 	
 	public Deserializer() {}
 	
+	@SuppressWarnings("rawtypes")
 	public Object deserialize(Document doc) throws Exception{
 		List objects = doc.getRootElement().getChildren();
 		
 		createObjects(objects);
 		assignValues(objects);
+		// returns only first object
 		return table.get("0");
 		
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void createObjects(List objects) throws Exception{
 		for(Object o : objects) {
 			Element oe = (Element) objects.get(objects.indexOf(o));
 			Class c = Class.forName(oe.getAttributeValue("class"));
 			Object inst = null;
 			if(!c.isArray()) {
+		
 				Constructor con = c.getDeclaredConstructor(null);
 				if(!Modifier.isPublic(con.getModifiers()))
 					con.setAccessible(true);
 				inst = con.newInstance(null);
+				
 			} else
-				inst = Array.newInstance(c.getComponentType(), 
-						Integer.parseInt(oe.getAttributeValue("length")));
+				inst = Array.newInstance(c.getComponentType(), Integer.parseInt(oe.getAttributeValue("length")));
+			
 			table.put(oe.getAttributeValue("id"), inst);
 			}
 	}
 	
+	@SuppressWarnings({ "rawtypes" })
 	private void assignValues(List objects) throws Exception {
 		for(Object o : objects) {
+			// grab <object>
 			Element oe = (Element) objects.get(objects.indexOf(o));
+			// retrieve object w/ corresponding id
 			Object inst = table.get(oe.getAttributeValue("id"));
-			List fes = oe.getChildren();
+			// grab <object>'s children elems
+			List children = oe.getChildren();
+			
 			if(!inst.getClass().isArray()) {
-				for (Object f: fes) {
-					Element fe = (Element) fes.get(fes.indexOf(f));
-					Class declaringClass = Class.forName(fe.getAttributeValue("declaringclass"));
-					String fieldName = fe.getAttributeValue("name");
-					Field field = declaringClass.getDeclaredField(fieldName);
+				for (Object child : children) {
+					// grab child element
+					Element ch = (Element) children.get(children.indexOf(child));
+					
+					Class declaringClass = Class.forName(ch.getAttributeValue("declaringclass"));
+					String fieldName = ch.getAttributeValue("name");
+					Field field = declaringClass.getDeclaredField(fieldName);	
+					
+					Field mods = Field.class.getDeclaredField("modifiers");
+					mods.setAccessible(true);
+					mods.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+					
 					if(!Modifier.isPublic(field.getModifiers()))
 						field.setAccessible(true);
-					// added after submission
-					// reset modifier in case it's final
-					field.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-					Element ve = (Element) fe.getChildren().get(0);
+						
+					/*
+					// don't deal with final fields
+					if(Modifier.isFinal(field.getModifiers()))
+						continue;
+					*/
+					// grab field info
+					Element ve = (Element) ch.getChildren().get(0);
+					
 					field.set(inst, value(ve,field.getType()));
+					
 				}
 			} else {
 				Class comptype = inst.getClass().getComponentType();
-				for(Object a : fes) 
-					Array.set(inst, fes.indexOf(a), value((Element) fes.get(objects.indexOf(a)), comptype));
+				for(int i=0; i<children.size();i++) 
+					Array.set(inst, i, value((Element) children.get(i), comptype));
 			}
 			
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private Object value(Element ve, Class type) throws ClassNotFoundException {
 		String vtype = ve.getName();
 		if(vtype.equals("null"))

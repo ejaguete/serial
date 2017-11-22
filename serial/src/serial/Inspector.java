@@ -35,7 +35,13 @@ public class Inspector {
 		printClass(c, false);
 		
 		if(c.getSuperclass()!=null) {
-			printClass(c.getSuperclass(),true);
+			if(c.getSuperclass().getName()!="java.lang.Object")
+				printClass(c.getSuperclass(),true);
+			else {
+				out.printf(format, "SUPERCLASS", "java.lang.Object");
+				out.println();
+			}
+				
 			if(!foundSupers.contains(c.getSuperclass().getName())) {
 				
 				foundSupers.add(c.getSuperclass().getName());
@@ -70,7 +76,8 @@ public class Inspector {
 		if(fields.length!=0) {
 			for (Field f : fields) {
 				f.setAccessible(true);
-				printField(o, f);
+				if(!Modifier.isTransient(f.getModifiers())) 
+					printField(o, f);
 			}
 		} else {
 			out.printf(format, "FIELD", NONE);

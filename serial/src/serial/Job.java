@@ -4,11 +4,11 @@ public class Job {
 	
 	// class containing primitives
 	
-	private String name;
+	private int name;
 	private int level;
 
 	public Job() {
-		name = "";
+		name = '-';
 		level = -1;
 	}
 	
@@ -22,9 +22,12 @@ public class Job {
 		setLevel(l);
 	}
 	
-	public void setName(String n) { name = n; }
+	public void setName(String n) { 
+		for(int i=0;i<n.length();i++)
+			name += n.charAt(i);
+	}
 	
-	public String getName() { return name; }
+	public int getName() { return name; }
 	
 	public void setLevel(int l) { 
 		if(l>=1)

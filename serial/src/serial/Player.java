@@ -7,7 +7,7 @@ public class Player {
 	// object using a collection class to refer to other objects
 	
 	private String name;
-	private ArrayList<Job> jobs = new ArrayList<Job>();
+	private ArrayList<Job> jobs;
 	
 	public Player() {
 		name = "";
@@ -15,6 +15,7 @@ public class Player {
 	
 	public Player(String n) {
 		setName(n);
+		jobs = new ArrayList<Job>();
 	}
 	
 	public Player(String n, ArrayList<Job> js) {
@@ -22,7 +23,10 @@ public class Player {
 		setJobs(js);
 	}
 	
-	public void setName(String n) { name = n; }
+	public void setName(String n) { 
+		for (int i=0; i<n.length();i++)
+			name += n.charAt(i);
+	}
 	
 	public String getName() { return name; }
 	
@@ -38,7 +42,7 @@ public class Player {
 	public Job getJob(String jobName) {
 		Job j = null;
 		for (Job job : jobs) {
-			if(job.getName()==jobName) {
+			if(job.getName()==jobName.charAt(0)) {
 				j = job;
 				break;
 			}
@@ -48,7 +52,7 @@ public class Player {
 	
 	public void removeJob(String jobName) {
 		for (Job j : jobs) {
-			if(j.getName()==jobName) {
+			if(j.getName()==jobName.charAt(0)) {
 				jobs.remove(jobs.indexOf(j));
 				break;
 			}

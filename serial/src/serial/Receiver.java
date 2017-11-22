@@ -1,23 +1,18 @@
 package serial;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 public class Receiver {
+	static ArrayList<Object> objects = new ArrayList<Object>();
 	
-	public static boolean objCreated = false;
-	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		int port = 9000;
 		ServerSocket socket = new ServerSocket(port);
 		System.out.println("RECEIVER : server initialized");
@@ -37,14 +32,13 @@ public class Receiver {
 
 				doc = parser.build(is);
 				System.out.println("RECEIVER : deserializing...");
-				Object ob = ds.deserialize(doc);
-				XMLOutputter out = new XMLOutputter();
-				out.setFormat(Format.getPrettyFormat());
-				out.output(doc, System.out);
-				/*
+				Object o = ds.deserialize(doc);
 				System.out.println("RECEIVER : inspecting...");
-				inspect.inspect(ob,false);
-				*/
+				inspect.inspect(o,false);
+				if(ds.table.size()>1) {
+					for(int i=1;i<ds.table.size();i++)
+						inspect.inspect(ds.table.get(Integer.toString(i)), false);
+				}
 				
 			} catch (JDOMException e) {
 				e.printStackTrace();

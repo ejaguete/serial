@@ -7,11 +7,13 @@ import java.util.Map;
 import org.jdom2.*;
 
 public class Serializer {
-	public Document doc = new Document(new Element("root"));
+	private static Document doc = new Document(new Element("serialized"));
+	@SuppressWarnings("rawtypes")
 	Map table = new IdentityHashMap();
 	
 	public Serializer() {};
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Document serialize(Object o) throws Exception {
 		// record object to serialize
 		String id = Integer.toString(table.size());
@@ -39,8 +41,6 @@ public class Serializer {
 				Class ftype = field.getType();
 				Object guts = field.get(o);
 				
-				if(Modifier.isTransient(field.getModifiers())) 
-					guts = null;
 				// get field info
 				fe.addContent(variable(ftype, guts));
 				// add field
@@ -58,6 +58,7 @@ public class Serializer {
 		
 		return doc;
 	}
+
 	
 	private Element variable(Class type, Object guts) throws Exception {		
 		if(guts==null)
@@ -80,4 +81,5 @@ public class Serializer {
 		}
 
 	}
+
 }

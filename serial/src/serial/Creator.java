@@ -459,7 +459,7 @@ public class Creator {
 			}
 			if(ps[0]!=null && ps[1]!=null && ps[2]!=null) {
 				Sender.objects.add(new Alliance(ps[0],ps[1],ps[2]));
-				msg = "<html>OK : created an ILevel object!";
+				msg = "<html>OK : created an Alliance object!";
 			}
 		} catch(PatternSyntaxException e) {
 			return msg;
@@ -496,7 +496,7 @@ public class Creator {
 
 		if(!name.equals("") && lv1OK && lv2OK) {
 			Sender.objects.add(new Player(name, js));
-			msg = "<html>OK : created a Job object!";		
+			msg = "<html>OK : created a Player object!";		
 		}	
 		return msg;
 	}
